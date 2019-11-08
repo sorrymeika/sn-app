@@ -11,5 +11,5 @@ function SfsImage({ completeUrl, src, size, quantity, type, ...props }) {
 }
 
 export default inject(({ ctx }) => ({
-    completeUrl: ctx.sfs.completeUrl
+    completeUrl: ctx.app.sfs.completeUrl
 }))(SfsImage);
