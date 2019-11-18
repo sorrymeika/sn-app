@@ -2,12 +2,16 @@ import { util } from "snowball";
 import { loader } from "snowball/widget";
 
 export class Server {
-    constructor({ baseUrl }) {
+    constructor({ baseUrl, app }) {
+        this.app = app;
         this.baseUrl = baseUrl;
     }
 
     post(url, payload, options = {}) {
-        const { isShowLoading } = options;
+        const {
+            isShowLoading,
+            autoLogin = true
+        } = options;
 
         isShowLoading && loader.showLoader();
         const complete = (result) => {
@@ -23,6 +27,11 @@ export class Server {
                 complete(res);
                 if (res.success) {
                     resolve(res);
+                } else if (res.code == 10002 && autoLogin) {
+                    this.app.service.user.goToLogin({
+                        onLogin: () => this.post(url, payload, options),
+                        onCancelLogin: () => reject(res)
+                    });
                 } else {
                     reject(res);
                 }
