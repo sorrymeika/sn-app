@@ -75,7 +75,7 @@ export class Server {
             xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
             xhr.withCredentials = true;
 
-            xhr.send(JSON.stringify(payload));
+            xhr.send(payload == null ? null : JSON.stringify(payload));
         });
     };
 }
