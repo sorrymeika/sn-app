@@ -1,9 +1,14 @@
 import { util } from "snowball";
+import { autowired, Service } from "snowball/app";
 import { loader } from "snowball/widget";
 
-export class Server {
-    constructor({ baseUrl, app }) {
-        this.app = app;
+export class Server extends Service {
+    @autowired
+    userService;
+
+    constructor({ baseUrl }) {
+        super();
+
         this.baseUrl = baseUrl;
     }
 
@@ -28,9 +33,9 @@ export class Server {
                 if (res.success) {
                     resolve(res);
                 } else if (res.code == 10002 && autoLogin) {
-                    this.app.service.user.goToLogin({
+                    this.userService.goToLogin({
                         onLogin: () => this.post(url, payload, options),
-                        onCancelLogin: () => reject(res)
+                        onCancel: () => reject(res)
                     });
                 } else {
                     reject(res);
